@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Facebook, Twitter, Instagram } from "lucide-react";
-import { openCookieSettings } from "./CookiesConsent";
 
 const Footer = () => {
   const socialLinks = [
@@ -22,32 +21,13 @@ const Footer = () => {
             <p className="font-body text-primary-foreground/60 text-sm leading-relaxed">
               Cultivating excellence across the agricultural landscape since 2021.
             </p>
-
-            {/* Social Media Links */}
-            <div className=" border-primary-foreground/10 my-10">
-              <div className="flex gap-4">
-                {socialLinks.map(({ icon: Icon, label, url, color }) => (
-                  <a
-                    key={label}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className={`transition-colors ${color}`}
-                    title={label}
-                  >
-                    <Icon className="w-5 h-5 text-primary-foreground/60 hover:text-gold" />
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Quick Links */}
           <div>
             <h4 className="font-display text-lg font-semibold mb-4 text-gold">Quick Links</h4>
             <div className="flex flex-col gap-2">
-              {["About Us", "Products", "Sustainability", "Careers", "Contact"].map((item) => (
+              {["About Us", "Products", "Sustainability", "Contact"].map((item) => (
                 <Link
                   key={item}
                   to={`/${item.toLowerCase().replace(" ", "-").replace("about-us", "about")}`}
@@ -74,7 +54,6 @@ const Footer = () => {
               ))}
             </div>
           </div>
-
 
           {/* Contact */}
           <div>
@@ -136,24 +115,34 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-
+          {/* Social Media Links */}
+          <div className=" border-primary-foreground/10">
+            <div className="flex gap-4">
+              {socialLinks.map(({ icon: Icon, label, url, color }) => (
+                <a
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className={`transition-colors ${color}`}
+                  title={label}
+                >
+                  <Icon className="w-5 h-5 text-primary-foreground/60 hover:text-gold" />
+                </a>
+              ))}
+            </div>
+          </div>
 
           <p className="font-body text-xs text-primary-foreground/40">
             ©{new Date().getFullYear()} PK5 Agro-Allied. All rights reserved.
           </p>
 
-          <div className="flex gap-6">
-            {/* <span className="font-body text-xs text-primary-foreground/40">NAFDAC Certified</span>
+          {/* <div className="flex gap-6">
+            <span className="font-body text-xs text-primary-foreground/40">NAFDAC Certified</span>
             <span className="font-body text-xs text-primary-foreground/40">SON Approved</span>
-            <span className="font-body text-xs text-primary-foreground/40">Export Licensed</span> */}
-
-            <button
-              onClick={openCookieSettings}
-              className="font-body text-xs text-primary-foreground/60 hover:text-gold transition-colors"
-            >
-              Cookie Settings
-            </button>
-          </div>
+            <span className="font-body text-xs text-primary-foreground/40">Export Licensed</span>
+          </div> */}
         </div>
       </div>
     </footer>
