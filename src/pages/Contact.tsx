@@ -5,13 +5,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mail, Phone, MapPin, MessageCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { contactService } from "@/api/contactService";
-
+import { api } from "@/lib/api";
 
 function Contact() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const APP_ID = import.meta.env.VITE_APP_ID;
 
   // Local state for the form (UI-friendly)
   const [form, setForm] = useState({
@@ -21,7 +19,7 @@ function Contact() {
     company: "",
     inquiryType: "",
     message: "",
-    appId: APP_ID
+    appId: ""
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,16 +36,16 @@ function Contact() {
       phoneNumber: form.phone,
       company: form.company || "Individual",
       subject: form.inquiryType,
-      appId: APP_ID,
+      appId: "com.pk5.agro",
       messageBody: form.message
     };
 
     try {
-      const response = await contactService.sendContactForm(payload);
+      const response = await api.sendContactForm(payload);
 
       toast({
         title: "Success!",
-        description: response.data || "Your message has been received."
+        description: response.responseMessage || "Your message has been received."
       });
 
       setForm({ fullName: "", email: "", phone: "", company: "", inquiryType: "", message: "", appId: form.appId });
