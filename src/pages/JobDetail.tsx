@@ -19,11 +19,13 @@ const applicationSchema = z.object({
 });
 
 const JobDetail = () => {
+  const APP_ID = import.meta.env.VITE_APP_ID;
+
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
 
-  const [job, setJob] = useState<any>(location.state?.job || null);
-  const [loading, setLoading] = useState(!location.state?.job && !!id);
+  const [job, setJob] = useState<any>( null);
+  const [loading, setLoading] = useState( !!id);
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", phone: "", cover: "" });
   const [cv, setCv] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,10 +36,10 @@ const JobDetail = () => {
     window.scrollTo(0, 0);
 
     const fetchJob = async () => {
-      if (!job && id) {
+      if (id) {
         try {
           setLoading(true);
-          const response = await careerService.getJob(id);
+          const response = await careerService.getJob(id, APP_ID);
           const jobData = response?.responseData;
           if (jobData) {
             setJob(jobData);
@@ -233,29 +235,6 @@ const JobDetail = () => {
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       maxLength={30}
                       className="h-11"
-                    />
-                  </div>
-                </div>
-
-                {/* Row 3: Position */}
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="phone" className="text-sm font-semibold text-foreground mb-2 block">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      placeholder="+234 (0) 123 456 7890"
-                      value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      maxLength={30}
-                      className="h-11"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-semibold text-foreground mb-2 block">Position Applied For</Label>
-                    <Input
-                      value={job.title}
-                      readOnly
-                      className="bg-background/60 h-11 cursor-default"
                     />
                   </div>
                 </div>
