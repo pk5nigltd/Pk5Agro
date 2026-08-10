@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mail, Phone, MapPin, MessageCircle, Loader2 } from "lucide-react";
+import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { contactService } from "@/api/contactService";
+import { locations } from "@/data/location";
 
+const LocationsMap = lazy(() => import("@/components/ui/locationsMap"));
+
+const actualLocations = locations.map((loc) => loc.actualAddress);
 
 function Contact() {
   const { toast } = useToast();
@@ -63,10 +67,12 @@ function Contact() {
   };
 
   return (
-    <main className="pt-20">
-      <section className="section-padding bg-forest-gradient text-center">
+    <main className="bg-background">
+      <section className="section-padding pt-32 md:pt-40 md:pb-28 bg-forest-gradient text-center">
         <div className="container-wide max-w-3xl">
-          <p className="text-gold font-body text-sm tracking-[0.2em] uppercase mb-3">Get In Touch</p>
+          <p className="text-gold font-body md:text-lg font-semibold text-sm tracking-[0.18em] uppercase mb-4 leading-relaxed">
+            Get In Touch
+          </p>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
             Contact Us
           </h1>
@@ -91,7 +97,7 @@ function Contact() {
                       <MapPin className="w-5 h-5 text-accent" />
                     </div>
                     <div>
-                      <h3 className="font-body text-sm font-semibold text-foreground">Head Office</h3>
+                      <h3 className="font-body text-sm font-semibold text-foreground">USA Office</h3>
                       <p className="font-body text-sm text-muted-foreground">5901 Peachtree Dunwoody Road, Suite A310, Atlanta, GA 30328, USA</p>
                     </div>
                   </a>
@@ -108,10 +114,10 @@ function Contact() {
                     </div>
                     <div>
                       <h3 className="font-body text-sm font-semibold text-foreground">
-                        Branch Office
+                        Enugu Office
                       </h3>
                       <p className="font-body text-sm text-muted-foreground">
-                        2/5, Nza Street, Independence Layout Enugu, Enugu State, Nigeria
+                        2/4, Nza Street, Independence Layout Enugu, Enugu State, Nigeria
                       </p>
                     </div>
                   </a>
@@ -227,18 +233,16 @@ function Contact() {
             </div>
           </div>
 
-          {/* Google Map Embed (Head Office - Atlanta) */}
           <div className="rounded-xl overflow-hidden border border-border h-96 bg-muted flex items-center justify-center">
-            <iframe
-              title="Head Office Location"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps?q=5901%20Peachtree%20Dunwoody%20Road,%20Suite%20A310,%20Atlanta,%20GA%2030328,%20USA&output=embed"
-            />
+            {/* Safe loading bridge during async transitions */}
+            <Suspense fallback={
+              <div className="flex flex-col items-center gap-2">
+                <Loader2 className="h-6 w-6 animate-spin text-gold" />
+                <span className="text-xs text-muted-foreground">Loading Map System...</span>
+              </div>
+            }>
+              <LocationsMap locations={actualLocations} />
+            </Suspense>
           </div>
 
         </div>

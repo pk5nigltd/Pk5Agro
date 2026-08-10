@@ -1,4 +1,4 @@
-import { Leaf, Shield, Lightbulb, Award, Eye, Target, BadgeCheck, Briefcase, Building2, Cpu, Factory, GraduationCap, Handshake, ArrowRight, Layers, Linkedin, Mail, Network, Settings2, Sparkles, Sprout, Truck, Wallet, X, TrendingUp } from "lucide-react";
+import { Leaf, Shield, Lightbulb, Award, Eye, Target, Building2, Cpu, Factory, Handshake, ArrowRight, Layers, Linkedin, Mail, Network, Settings2, Sprout, Truck, Wallet, X, TrendingUp } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import strategyCrop from "@/assets/strategy-crop.jpg";
@@ -39,12 +39,29 @@ const About = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  const handleClose = () => {
+    const previousSlug = activeSlug;
+    setActiveSlug(null);
+
+    setTimeout(() => {
+      if (previousSlug) {
+        const element = document.getElementById(`leader-card-${previousSlug}`);
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center", // Brings it nicely into the viewport view area without jumping erratic amounts
+          });
+        }
+      }
+    }, 100);
+  };
+
   return (
-    <main className="pt-20">
+    <main className="bg-background">
       {/* Hero */}
-      <section className="section-padding bg-forest-gradient text-center">
+      <section className="section-padding pt-32 md:pt-40 md:pb-28 bg-forest-gradient text-center">
         <div className="container-wide max-w-3xl">
-          <p className="text-gold font-body text-sm tracking-[0.2em] uppercase mb-3">About Us</p>
+          <p className="text-gold font-body text-sm md:text-base font-semibold tracking-[0.18em] uppercase mb-4 leading-relaxed">About Us</p>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
             Our Story
           </h1>
@@ -102,7 +119,7 @@ const About = () => {
       <section className="section-padding bg-muted/50">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <p className="text-accent font-body text-sm tracking-[0.2em] uppercase mb-3">What Drives Us</p>
+            <p className="text-accent font-body text-sm md:text-base font-semibold tracking-[0.18em] uppercase mb-4 leading-relaxed">What Drives Us</p>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Core Values</h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -165,7 +182,7 @@ const About = () => {
         />
         <div className="container-wide relative">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-accent font-body text-sm tracking-[0.2em] uppercase mb-3">Leadership</p>
+            <p className="text-accent font-body text-sm md:text-base font-semibold tracking-[0.18em] uppercase mb-4 leading-relaxed">Leadership</p>
             <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-5">
               PK5 Agro-Allied Leadership
             </h2>
@@ -182,8 +199,15 @@ const About = () => {
               return (
                 <button
                   key={person.slug}
+                  id={`leader-card-${person.slug}`} // FIX: Added dynamic ID to map target
                   type="button"
-                  onClick={() => setActiveSlug(isActive ? null : person.slug)}
+                  onClick={() => {
+                    if (isActive) {
+                      handleClose(); // FIX: Call custom handler instead of basic state updates
+                    } else {
+                      setActiveSlug(person.slug);
+                    }
+                  }}
                   aria-expanded={isActive}
                   aria-controls="leader-detail-panel"
                   aria-label={`${isActive ? "Close" : "Open"} full profile of ${person.name}, ${person.role}`}
@@ -219,14 +243,6 @@ const About = () => {
                     <div className="flex items-center justify-between mt-5 pt-5 border-t border-border">
                       <div className="flex items-center gap-3">
                         <a
-                          href={person.linkedin}
-                          onClick={(e) => e.stopPropagation()}
-                          aria-label={`${person.name} on LinkedIn`}
-                          className="w-9 h-9 rounded-full flex items-center justify-center bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
-                        >
-                          <Linkedin className="w-4 h-4" />
-                        </a>
-                        <a
                           href={person.email}
                           onClick={(e) => e.stopPropagation()}
                           aria-label={`Email ${person.name}`}
@@ -247,7 +263,7 @@ const About = () => {
 
           {/* Inline expanded profile panel */}
           <AnimatePresence initial={false} mode="wait">
-            {active && (
+            {activeSlug !== null && active && (
               <motion.div
                 key={active.slug}
                 id="leader-detail-panel"
@@ -258,7 +274,8 @@ const About = () => {
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                 className="overflow-hidden mt-10"
               >
-                <LeaderPanel leader={active} onClose={() => setActiveSlug(null)} />
+                {/* FIX: Swapped inner panel callback target to handleClose */}
+                <LeaderPanel leader={active} onClose={handleClose} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -269,7 +286,7 @@ const About = () => {
       <section className="section-padding bg-background">
         <div className="container-wide">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <p className="text-accent font-body text-sm tracking-[0.2em] uppercase mb-3">
+            <p className="text-accent font-body text-sm md:text-base font-semibold tracking-[0.18em] uppercase mb-4 leading-relaxed">
               Strategic Focus Areas
             </p>
             <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-5">
@@ -369,7 +386,7 @@ const About = () => {
         <div className="container-wide relative">
           <div className="grid lg:grid-cols-[1fr_1.1fr] gap-14 items-center">
             <div>
-              <p className="text-accent font-body text-sm tracking-[0.2em] uppercase mb-3">
+              <p className="text-accent font-body text-sm md:text-base font-semibold tracking-[0.18em] uppercase mb-4 leading-relaxed">
                 Competitive Advantage
               </p>
               <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-5">
@@ -448,7 +465,7 @@ const About = () => {
         <div className="container-wide">
           <div className="grid lg:grid-cols-[1.1fr_1fr] gap-14 items-start">
             <div className="lg:sticky lg:top-28">
-              <p className="text-accent font-body text-sm tracking-[0.2em] uppercase mb-3">
+              <p className="text-accent font-body text-sm md:text-base font-semibold tracking-[0.18em] uppercase mb-4 leading-relaxed">
                 Growth Strategy
               </p>
               <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-5">
@@ -587,13 +604,14 @@ const LeaderPanel = ({ leader, onClose }: { leader: Leader; onClose: () => void 
         </p>
 
         <div className="flex items-center gap-3 mt-5">
-          <a
+          {/* linkedin icon beside email icon */}
+          {/* <a
             href={leader.linkedin}
             aria-label={`${leader.name} on LinkedIn`}
             className="w-10 h-10 rounded-full flex items-center justify-center bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
           >
             <Linkedin className="w-4 h-4" />
-          </a>
+          </a> */}
           <a
             href={leader.email}
             aria-label={`Email ${leader.name}`}
@@ -776,6 +794,7 @@ const MissionCarousel = () => {
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -20 }}
                               transition={{ duration: 0.7, ease: "easeOut" }}
+                              className="relative px-10"
                             >
                               {/* Glass icon badge */}
                               <div className="inline-flex items-center gap-3 mb-6 px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20">
@@ -820,11 +839,10 @@ const MissionCarousel = () => {
               className="group relative h-2 flex items-center"
             >
               <span
-                className={`block h-[3px] rounded-full transition-all duration-500 ${
-                  selected === i
-                    ? "w-12 bg-gold"
-                    : "w-6 bg-primary-foreground/25 group-hover:bg-primary-foreground/50"
-                }`}
+                className={`block h-[3px] rounded-full transition-all duration-500 ${selected === i
+                  ? "w-12 bg-gold"
+                  : "w-6 bg-primary-foreground/25 group-hover:bg-primary-foreground/50"
+                  }`}
               />
             </button>
           ))}
