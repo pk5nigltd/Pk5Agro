@@ -1,3 +1,5 @@
+import { useEffect } from "react"; // 1. Add useEffect
+import { useLocation } from "react-router-dom"; // 2. Add useLocation
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -5,14 +7,35 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import CookieConsent from "./components/CookiesConsent";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Products from "./pages/Products";
 import Sustainability from "./pages/Sustainability";
 import Contact from "./pages/Contact";
+import Careers from "./pages/Careers";
+import JobDetail from "./pages/JobDetail";
 import NotFound from "./pages/NotFound";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 const queryClient = new QueryClient();
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Fix for standard window scrolling
+    window.scrollTo(0, 0);
+    
+    // Fix if you have Radix ScrollArea components hidden inside individual pages
+    const radixViewports = document.querySelectorAll('[data-radix-scroll-area-viewport]');
+    radixViewports.forEach((viewport) => {
+      viewport.scrollTop = 0;
+    });
+  }, [pathname]);
+
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -20,6 +43,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop /> 
         <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -27,9 +51,14 @@ const App = () => (
           <Route path="/products" element={<Products />} />
           <Route path="/sustainability" element={<Sustainability />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/careers/job/:id/apply" element={<JobDetail />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
+        <CookieConsent />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
